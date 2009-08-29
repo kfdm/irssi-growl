@@ -35,37 +35,7 @@ sub cmd_growl_net {
 }
 
 sub cmd_growl_net_test {
-	
-	# $Sticky = Irssi::settings_get_bool('growl_net_sticky');
-	# 	my ( $data, $nick, $address, $channel) = @_;
-	# 	my ($server);
-	# 	$server = Irssi::active_server();
-	# 	
-	# 	if (Irssi::settings_get_bool('growl_net_sticky_away')) {
-	# 		if (!$server->{usermode_away}) {
-	# 			$Sticky = 0;
-	# 			$testing = "Not Away"
-	# 		} else {
-	# 			$Sticky = 1;
-	# 			$testing = "Away"
-	# 		}
-	# 			# $Sticky = Server{'usermode_away'};
-	# 		} else {
-	# 		$Sticky = Irssi::settings_get_bool('growl_net_sticky');
-	# 	}
-	# $testing =  $server->{usermode_away};
-	
-	
 	set_sticky();
-	
-	
-	
-	# if (!$server->{usermode_away}) {
-	# 		$testing = 1
-	# 	} else {
-	# 		$testing = 0
-	# 	}
-	
 	
 	Net::Growl::notify(
 		host		=> "$GrowlHost",
@@ -92,7 +62,6 @@ $GrowlPass 	= Irssi::settings_get_str('growl_net_pass');
 $GrowlServ 	= Irssi::settings_get_str('growl_net_server');
 
 $AppName	= "irssi $GrowlServ";
-	
 
 Net::Growl::register(
 	host		=> "$GrowlHost",
@@ -100,56 +69,12 @@ Net::Growl::register(
 	password	=> "$GrowlPass"
 );
 
-
 sub sig_message_private ($$$$) {
 	return unless Irssi::settings_get_bool('growl_show_privmsg');
 
 	my ($server, $data, $nick, $address) = @_;
-	# my ($server);
-	# $server = Irssi::active_server();
-	
-	# if (Irssi::settings_get_bool('growl_net_sticky_away')) {
-	# 	$Sticky = Server->{usermode_away}
-	# }
 	
 	set_sticky();
-	
-	# if (Irssi::settings_get_bool('growl_net_sticky_away')) {
-	# 		if (!$server->{usermode_away}) {
-	# 			$Sticky = 0;
-	# 			
-	# 		} else {
-	# 			$Sticky = 1;
-	# 			
-	# 		}
-	# 			# $Sticky = Server{'usermode_away'};
-	# 		} else {
-	# 		$Sticky = Irssi::settings_get_bool('growl_net_sticky');
-	# 	}
-	
-	
-	
-	
-	# if (Irssi::settings_get_bool('growl_net_sticky_away')) {
-	# 		if ($server->{usermode_away}) {
-	# 			$Sticky = 1
-	# 		} else {
-	# 			$Sticky = 0
-	# 		}
-	# 		
-	# 		# $Sticky = Server{'usermode_away'};
-	# 	} else {
-	# 		$Sticky = Irssi::settings_get_bool('growl_net_sticky');
-	# 	}
-	
-	
-	# if (Irssi::settings_get_bool('growl_net_sticky_away')) {
-	# 		$Sticky = Server{'usermode_away'};
-	# 	} else {
-	# 		$Sticky = Irssi::settings_get_bool('growl_net_sticky');
-	# 	}
-	
-	# $Sticky = Irssi::settings_get_bool('growl_net_sticky');
 	
 	Net::Growl::notify(
 		host		=> "$GrowlHost",
@@ -166,46 +91,8 @@ sub sig_print_text ($$$) {
 	return unless Irssi::settings_get_bool('growl_show_hilight');
 
 	my ($dest, $text, $stripped) = @_;
-	# my ($server);
-	# $server = Irssi::active_server();
 	
 	set_sticky();
-	
-	# if (Irssi::settings_get_bool('growl_net_sticky_away')) {
-	# 		if (!$server->{usermode_away}) {
-	# 			$Sticky = 0;
-	# 			
-	# 		} else {
-	# 			$Sticky = 1;
-	# 			
-	# 		}
-	# 			# $Sticky = Server{'usermode_away'};
-	# 		} else {
-	# 		$Sticky = Irssi::settings_get_bool('growl_net_sticky');
-	# 	}
-	
-	
-	
-	# if (Irssi::settings_get_bool('growl_net_sticky_away')) {
-	# 	if ($server->{usermode_away}) {
-	# 		$Sticky = 1
-	# 	} else {
-	# 		$Sticky = 0
-	# 	}
-	# 	
-	# 	# $Sticky = Server{'usermode_away'};
-	# } else {
-	# 	$Sticky = Irssi::settings_get_bool('growl_net_sticky');
-	# }
-	
-	
-	# if (Irssi::settings_get_bool('growl_net_sticky_away')) {
-	# 		$Sticky = Server{'usermode_away'};
-	# 	} else {
-	# 		$Sticky = Irssi::settings_get_bool('growl_net_sticky');
-	# 	}
-	
-	# $Sticky = Irssi::settings_get_bool('growl_net_sticky');
 	
 	if ($dest->{level} & MSGLEVEL_HILIGHT) {
 		
@@ -225,46 +112,8 @@ sub sig_notify_joined ($$$$$$) {
 	return unless Irssi::settings_get_bool('growl_show_notify');
 	
 	my ($server, $nick, $user, $host, $realname, $away) = @_;
-	# my ($server);
-	# $server = Irssi::active_server();
 	
 	set_sticky();
-	
-	# if (Irssi::settings_get_bool('growl_net_sticky_away')) {
-	# 		if (!$server->{usermode_away}) {
-	# 			$Sticky = 0;
-	# 			
-	# 		} else {
-	# 			$Sticky = 1;
-	# 			
-	# 		}
-	# 			# $Sticky = Server{'usermode_away'};
-	# 		} else {
-	# 		$Sticky = Irssi::settings_get_bool('growl_net_sticky');
-	# 	}
-	
-	
-	
-	# if (Irssi::settings_get_bool('growl_net_sticky_away')) {
-	# 		if ($server->{usermode_away}) {
-	# 			$Sticky = 1
-	# 		} else {
-	# 			$Sticky = 0
-	# 		}
-	# 		
-	# 		# $Sticky = Server{'usermode_away'};
-	# 	} else {
-	# 		$Sticky = Irssi::settings_get_bool('growl_net_sticky');
-	# 	}
-	
-	
-	# if (Irssi::settings_get_bool('growl_net_sticky_away')) {
-	# 		$Sticky = Server{'usermode_away'};
-	# 	} else {
-	# 		$Sticky = Irssi::settings_get_bool('growl_net_sticky');
-	# 	}
-	
-	# $Sticky = Irssi::settings_get_bool('growl_net_sticky');
 	
 	Net::Growl::notify(
 		host		=> "$GrowlHost",
@@ -281,39 +130,8 @@ sub sig_notify_left ($$$$$$) {
 	return unless Irssi::settings_get_bool('growl_show_notify');
 	
 	my ($server, $nick, $user, $host, $realname, $away) = @_;
-	# my ($server);
-	# $server = Irssi::active_server();
 	
 	set_sticky();
-	
-	# if (Irssi::settings_get_bool('growl_net_sticky_away')) {
-	# 		if (!$server->{usermode_away}) {
-	# 			$Sticky = 0;
-	# 			
-	# 		} else {
-	# 			$Sticky = 1;
-	# 			
-	# 		}
-	# 			# $Sticky = Server{'usermode_away'};
-	# 		} else {
-	# 		$Sticky = Irssi::settings_get_bool('growl_net_sticky');
-	# 	}
-	
-	
-	
-	# if (Irssi::settings_get_bool('growl_net_sticky_away')) {
-	# 		if ($server->{usermode_away}) {
-	# 			$Sticky = 1
-	# 		} else {
-	# 			$Sticky = 0
-	# 		}
-	# 		
-	# 		# $Sticky = Server{'usermode_away'};
-	# 	} else {
-	# 		$Sticky = Irssi::settings_get_bool('growl_net_sticky');
-	# 	}
-	
-	# $Sticky = Irssi::settings_get_bool('growl_net_sticky');
 	
 	Net::Growl::notify(
 		host		=> "$GrowlHost",
@@ -325,7 +143,6 @@ sub sig_notify_left ($$$$$$) {
 		password	=> "$GrowlPass",
 	 );
 }
-
 
 sub set_sticky {
 	my ($server);
@@ -345,8 +162,6 @@ sub set_sticky {
 	}
 }
 
-
-
 Irssi::command_bind('growl-net', 'cmd_growl_net');
 Irssi::command_bind('gn-test', 'cmd_growl_net_test');
 
@@ -355,7 +170,4 @@ Irssi::signal_add_last('print text', \&sig_print_text);
 Irssi::signal_add_last('notifylist joined', \&sig_notify_joined);
 Irssi::signal_add_last('notifylist left', \&sig_notify_left);
 
-
 Irssi::print('%G>>%n '.$IRSSI{name}.' '.$VERSION.' loaded (/growl-net for help. /gn-test to test.)');
-
-
