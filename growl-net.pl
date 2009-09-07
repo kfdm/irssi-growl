@@ -6,10 +6,10 @@
 # Based on the original growl script by Nelson Elhage and Toby Peterson.
 
 use strict;
-use vars qw($VERSION %IRSSI $AppName $GrowlHost $GrowlPass $GrowlServ $Sticky $testing);
+use vars qw($VERSION %IRSSI $AppName $GrowlHost $GrowlPass $GrowlServ $Sticky $testing $growl $GrowlIcon);
 
 use Irssi;
-use Net::Growl;
+use Growl::GNTP;
 
 $VERSION = '0.03b1';
 %IRSSI = (
@@ -37,15 +37,13 @@ sub cmd_growl_net {
 sub cmd_growl_net_test {
 	set_sticky();
 	
-	Net::Growl::notify(
-		host		=> "$GrowlHost",
-		application	=> "$AppName",
-		title		=> "Test:",
-		description	=> "This is a test.\n AppName = $AppName \n GrowlHost = $GrowlHost \n GrowlServ = $GrowlServ \n Sticky = $Sticky\n Away = $testing",
-		priority	=> 0,
-		sticky		=> "$Sticky",
-		password	=> "$GrowlPass",
-	 );
+	$growl->notify(
+		Event => "Private Message",
+		Title => "Test:",
+		Message => "This is a test.\n AppName = $AppName \n GrowlHost = $GrowlHost \n GrowlServ = $GrowlServ \n Sticky = $Sticky\n Away = $testing",
+		Sticky => "$Sticky",
+		Priority => 0,
+	);
 } 
 
 Irssi::settings_add_bool($IRSSI{'name'}, 'growl_show_privmsg', 1);
@@ -54,20 +52,32 @@ Irssi::settings_add_bool($IRSSI{'name'}, 'growl_show_notify', 1);
 Irssi::settings_add_str($IRSSI{'name'}, 'growl_net_pass', 'password');
 Irssi::settings_add_str($IRSSI{'name'}, 'growl_net_client', 'localhost');
 Irssi::settings_add_str($IRSSI{'name'}, 'growl_net_server', 'local');
+Irssi::settings_add_str($IRSSI{'name'}, 'growl_net_icon', '');
 Irssi::settings_add_bool($IRSSI{'name'}, 'growl_net_sticky', 0);
 Irssi::settings_add_bool($IRSSI{'name'}, 'growl_net_sticky_away', 0);
+
 
 $GrowlHost 	= Irssi::settings_get_str('growl_net_client');
 $GrowlPass 	= Irssi::settings_get_str('growl_net_pass');
 $GrowlServ 	= Irssi::settings_get_str('growl_net_server');
+$GrowlIcon 	= Irssi::settings_get_str('growl_net_icon');
 
 $AppName	= "irssi $GrowlServ";
 
-Net::Growl::register(
-	host		=> "$GrowlHost",
-	application	=> "$AppName",
-	password	=> "$GrowlPass"
+
+$growl = Growl::GNTP->new(
+	AppName => $AppName,
+	PeerHost => $GrowlHost,
+	Password => $GrowlPass,
+	AppIcon => $GrowlIcon,
 );
+
+$growl->register([
+	{ Name => "Private Message", },
+	{ Name => "Hilight", },
+	{ Name => "Join", },
+	{ Name => "Part", },
+]);
 
 sub sig_message_private ($$$$) {
 	return unless Irssi::settings_get_bool('growl_show_privmsg');
@@ -76,15 +86,13 @@ sub sig_message_private ($$$$) {
 	
 	set_sticky();
 	
-	Net::Growl::notify(
-		host		=> "$GrowlHost",
-		application	=> "$AppName",
-		title		=> "$nick",
-		description	=> "$data",
-		priority	=> 0,
-		sticky		=> "$Sticky",
-		password	=> "$GrowlPass",
-	 );
+	$growl->notify(
+		Event => "Private Message",
+		Title => "$nick",
+		Message => "$data",
+		Priority => 0,
+		Sticky => "$Sticky",
+	);
 }
 
 sub sig_print_text ($$$) {
@@ -96,15 +104,13 @@ sub sig_print_text ($$$) {
 	
 	if ($dest->{level} & MSGLEVEL_HILIGHT) {
 		
-		Net::Growl::notify(
-			host		=> "$GrowlHost",
-			application	=> "$AppName",
-			title		=> "$dest->{target}",
-			description	=> "$stripped",
-			priority	=> 0,
-			sticky		=> "$Sticky",
-			password	=> "$GrowlPass",
-		 );
+		$growl->notify(
+			Event => "Hilight",
+			Title => "$dest->{target}",
+			Message => "$stripped",
+			Priority => 0,
+			Sticky => "$Sticky",
+		);
 	}
 }
 
@@ -115,15 +121,13 @@ sub sig_notify_joined ($$$$$$) {
 	
 	set_sticky();
 	
-	Net::Growl::notify(
-		host		=> "$GrowlHost",
-		application	=> "$AppName",
-		title		=> "$realname" || "$nick",
-		description	=> "<$nick!$user\@$host>\nHas joined $server->{chatnet}",
-		priority	=> 0,
-		sticky		=> "$Sticky",
-		password	=> "$GrowlPass",
-	 );
+	$growl->notify(
+		Event => "Join",
+		Title => "$realname" || "$nick",
+		Message => "<$nick!$user\@$host>\nHas joined $server->{chatnet}",
+		Priority => 0,
+		Sticky => "$Sticky",
+	);
 }
 
 sub sig_notify_left ($$$$$$) {
@@ -133,15 +137,13 @@ sub sig_notify_left ($$$$$$) {
 	
 	set_sticky();
 	
-	Net::Growl::notify(
-		host		=> "$GrowlHost",
-		application	=> "$AppName",
-		title		=> "$realname" || "$nick",
-		description	=> "<$nick!$user\@$host>\nHas left $server->{chatnet}",
-		priority	=> 0,
-		sticky		=> "$Sticky",
-		password	=> "$GrowlPass",
-	 );
+	$growl->notify(
+		Event => "Part",
+		Title => "$realname" || "$nick",
+		Message => "<$nick!$user\@$host>\nHas left $server->{chatnet}",
+		Priority => 0,
+		Sticky => "$Sticky",
+	);
 }
 
 sub set_sticky {
