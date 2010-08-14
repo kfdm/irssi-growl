@@ -13,12 +13,16 @@ use Growl::GNTP;
 
 $VERSION = '0.03b1';
 %IRSSI = (
-	authors		=>	'Alex Mason, Jason Adams (based on the growl.pl script from Growl.info by Nelson Elhage and Toby Peterson)',
-	contact		=>	'axman6@gmail.com, kd on irc.freenode.net, (Hanji@users.sourceforge.net, toby@opendarwin.org)',
+	authors		=>	'Paul Traylor (gntp version), '.
+					'Alex Mason, Jason Adams (based on the growl.pl script from Growl.info by Nelson Elhage and Toby Peterson)',
+	contact		=>	'http://github.com/kfdm/irssi-growl',
 	name		=>	'growl-net',
-	description	=>	'Sends out Growl notifications over the netwotk or internet for Irssi',
+	description	=>	'Sends out Growl notifications over the netwotk or internet for Irssi. '.
+					'Requires Growl::GNTP',
 	license		=>	'BSD',
-	url			=>	'http://axman6.homeip.net/blog/growl-net-irssi-script/ ,http://growl.info/',
+	url			=>	'http://github.com/kfdm/irssi-growl (gntp version), '.
+					'http://axman6.homeip.net/blog/growl-net-irssi-script-its-back.html (udp version),  '.
+					'http://growl.info/',
 );
 
 # Notification Settings
