@@ -6,7 +6,7 @@
 # Based on the original growl script by Nelson Elhage and Toby Peterson.
 
 use strict;
-use vars qw($VERSION %IRSSI $AppName $GrowlHost $GrowlPort $GrowlPass $GrowlServ $Sticky $testing $growl $GrowlIcon);
+use vars qw($VERSION %IRSSI $growl);
 
 use Irssi;
 use Growl::GNTP;
@@ -62,12 +62,17 @@ sub cmd_help {
 }
 
 sub cmd_growl_net_test {
-	set_sticky();
+	my $GrowlHost	= Irssi::settings_get_str('growl_net_client');
+	my $GrowlServ	= Irssi::settings_get_str('growl_net_server');
+	my $GrowlIcon	= Irssi::settings_get_str('growl_net_icon');
+	my $AppName		= "irssi $GrowlServ";
+	
+	my $Sticky = set_sticky();
 	
 	$growl->notify(
 		Event => "Private Message",
 		Title => "Test:",
-		Message => "This is a test.\n AppName = $AppName \n GrowlHost = $GrowlHost \n GrowlServ = $GrowlServ \n Sticky = $Sticky\n Away = $testing",
+		Message => "This is a test.\n AppName = $AppName \n GrowlHost = $GrowlHost \n GrowlServ = $GrowlServ \n Sticky = $Sticky",
 		Sticky => "$Sticky",
 		Priority => 0,
 	);
@@ -78,7 +83,7 @@ sub sig_message_private ($$$$) {
 
 	my ($server, $data, $nick, $address) = @_;
 	
-	set_sticky();
+	my $Sticky = set_sticky();
 	
 	$growl->notify(
 		Event => "Private Message",
@@ -94,7 +99,7 @@ sub sig_print_text ($$$) {
 
 	my ($dest, $text, $stripped) = @_;
 	
-	set_sticky();
+	my $Sticky = set_sticky();
 	
 	if ($dest->{level} & MSGLEVEL_HILIGHT) {
 		
@@ -113,7 +118,7 @@ sub sig_notify_joined ($$$$$$) {
 	
 	my ($server, $nick, $user, $host, $realname, $away) = @_;
 	
-	set_sticky();
+	my $Sticky = set_sticky();
 	
 	$growl->notify(
 		Event => "Join",
@@ -129,7 +134,7 @@ sub sig_notify_left ($$$$$$) {
 	
 	my ($server, $nick, $user, $host, $realname, $away) = @_;
 	
-	set_sticky();
+	my $Sticky = set_sticky();
 	
 	$growl->notify(
 		Event => "Part",
@@ -145,7 +150,7 @@ sub sig_message_topic {
 	return unless Irssi::settings_get_bool('growl_show_topic');
 	my($server, $channel, $topic, $nick, $address) = @_;
 	
-	set_sticky();
+	my $Sticky = set_sticky();
 	
 	$growl->notify(
 		Event => "Topic",
@@ -162,44 +167,45 @@ sub set_sticky {
 	
 	if (Irssi::settings_get_bool('growl_net_sticky_away')) {
 		if (!$server->{usermode_away}) {
-			$Sticky = 0;
-			
+			return 0;
 		} else {
-			$Sticky = 1;
-			
+			return 1;
 		}
 			# $Sticky = Server{'usermode_away'};
 		} else {
-		$Sticky = Irssi::settings_get_bool('growl_net_sticky');
+		return Irssi::settings_get_bool('growl_net_sticky');
 	}
 }
 
-$GrowlHost	= Irssi::settings_get_str('growl_net_client');
-$GrowlPort	= Irssi::settings_get_str('growl_net_port');
-$GrowlPass	= Irssi::settings_get_str('growl_net_pass');
-$GrowlServ	= Irssi::settings_get_str('growl_net_server');
-$GrowlIcon	= Irssi::settings_get_str('growl_net_icon');
-$AppName	= "irssi $GrowlServ";
+sub cmd_register {
+	my $GrowlHost	= Irssi::settings_get_str('growl_net_client');
+	my $GrowlPort	= Irssi::settings_get_str('growl_net_port');
+	my $GrowlPass	= Irssi::settings_get_str('growl_net_pass');
+	my $GrowlServ	= Irssi::settings_get_str('growl_net_server');
+	my $GrowlIcon	= Irssi::settings_get_str('growl_net_icon');
+	my $AppName		= "irssi $GrowlServ";
 
-Irssi::print("%G>>%n Registering to send messages to $GrowlHost:$GrowlPort");
-$growl = Growl::GNTP->new(
-	AppName => $AppName,
-	PeerHost => $GrowlHost,
-	PeerPort => $GrowlPort,
-	Password => $GrowlPass,
-	AppIcon => $GrowlIcon,
-);
+	Irssi::print("%G>>%n Registering to send messages to $GrowlHost:$GrowlPort");
+	$growl = Growl::GNTP->new(
+		AppName => $AppName,
+		PeerHost => $GrowlHost,
+		PeerPort => $GrowlPort,
+		Password => $GrowlPass,
+		AppIcon => $GrowlIcon,
+	);
 
-$growl->register([
-	{ Name => "Private Message", },
-	{ Name => "Hilight", },
-	{ Name => "Join", },
-	{ Name => "Part", },
-	{ Name => "Topic", },
-]);
+	$growl->register([
+		{ Name => "Private Message", },
+		{ Name => "Hilight", },
+		{ Name => "Join", },
+		{ Name => "Part", },
+		{ Name => "Topic", },
+	]);
+}
 
 Irssi::command_bind('growl-net', 'cmd_help');
 Irssi::command_bind('gn-test', 'cmd_growl_net_test');
+Irssi::command_bind('growl-register', 'cmd_register');
 
 Irssi::signal_add_last('message private', 'sig_message_private');
 Irssi::signal_add_last('print text', 'sig_print_text');
@@ -207,4 +213,5 @@ Irssi::signal_add_last('notifylist joined', 'sig_notify_joined');
 Irssi::signal_add_last('notifylist left', 'sig_notify_left');
 Irssi::signal_add_last('message topic', 'sig_message_topic');
 
+cmd_register();
 Irssi::print('%G>>%n '.$IRSSI{name}.' '.$VERSION.' loaded (/growl-net for help. /gn-test to test.)');
