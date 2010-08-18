@@ -30,6 +30,7 @@ Irssi::settings_add_bool($IRSSI{'name'}, 'growl_show_privmsg', 1);
 Irssi::settings_add_bool($IRSSI{'name'}, 'growl_show_hilight', 1);
 Irssi::settings_add_bool($IRSSI{'name'}, 'growl_show_notify', 1);
 Irssi::settings_add_bool($IRSSI{'name'}, 'growl_show_topic', 1);
+Irssi::settings_add_bool($IRSSI{'name'}, 'growl_auto_register', 0);
 # Network Settings
 Irssi::settings_add_str($IRSSI{'name'}, 'growl_net_pass', 'password');
 Irssi::settings_add_str($IRSSI{'name'}, 'growl_net_client', 'localhost');
@@ -55,6 +56,7 @@ sub cmd_help {
 	Irssi::print('  %ygrowl_net_port%n : Set to the port you want to recieve notifications on.');
 	Irssi::print('  %ygrowl_net_server%n : Set to the name you want to give the machine irssi is running on. (remote)');
 	Irssi::print('  %ygrowl_net_pass%n : Set to your destination\'s Growl password. (Your machine)');
+	Irssi::print('  %growl_auto_register%n : Automatically send gntp registration on script load');
 	
 	Irssi::print('%WSticky Settings%n');
 	Irssi::print('  %ygrowl_net_sticky%n : Whether growls are sticky or not (ON/OFF/TOGGLE)');
@@ -213,5 +215,7 @@ Irssi::signal_add_last('notifylist joined', 'sig_notify_joined');
 Irssi::signal_add_last('notifylist left', 'sig_notify_left');
 Irssi::signal_add_last('message topic', 'sig_message_topic');
 
-cmd_register();
+if (Irssi::settings_get_bool('growl_auto_register')) {
+	cmd_register();
+}
 Irssi::print('%G>>%n '.$IRSSI{name}.' '.$VERSION.' loaded (/growl-net for help. /gn-test to test.)');
