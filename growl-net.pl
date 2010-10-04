@@ -11,7 +11,7 @@ use vars qw($VERSION %IRSSI $growl);
 use Irssi;
 use Growl::GNTP;
 
-$VERSION = '0.03b1';
+$VERSION = '0.1';
 %IRSSI = (
 	authors		=>	'Paul Traylor (gntp version), '.
 					'Alex Mason, Jason Adams (based on the growl.pl script from Growl.info by Nelson Elhage and Toby Peterson)',
@@ -179,7 +179,7 @@ sub set_sticky {
 	}
 }
 
-sub cmd_register {
+sub setup {
 	my $GrowlHost	= Irssi::settings_get_str('growl_net_client');
 	my $GrowlPort	= Irssi::settings_get_str('growl_net_port');
 	my $GrowlPass	= Irssi::settings_get_str('growl_net_pass');
@@ -195,7 +195,9 @@ sub cmd_register {
 		Password => $GrowlPass,
 		AppIcon => $GrowlIcon,
 	);
+}
 
+sub cmd_register {
 	$growl->register([
 		{ Name => "Private Message", },
 		{ Name => "Hilight", },
@@ -215,6 +217,7 @@ Irssi::signal_add_last('notifylist joined', 'sig_notify_joined');
 Irssi::signal_add_last('notifylist left', 'sig_notify_left');
 Irssi::signal_add_last('message topic', 'sig_message_topic');
 
+setup();
 if (Irssi::settings_get_bool('growl_auto_register')) {
 	cmd_register();
 }
