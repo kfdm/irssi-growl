@@ -30,7 +30,7 @@ The port on the destination computer
 ### `growl_net_server`
 The name of the computer running irssi
 
-### `growl_net_password`
+### `growl_net_pass`
 The growl password of the destination computer
 
 ### `growl_auto_register`
