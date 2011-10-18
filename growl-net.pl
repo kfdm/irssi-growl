@@ -72,7 +72,7 @@ sub cmd_growl_net_test {
 	
 	my $Sticky = set_sticky();
 	
-	$growl->notify(
+	growl_notify(
 		Event => "Private Message",
 		Title => "Test:",
 		Message => "This is a test.\n AppName = $AppName \n GrowlHost = $GrowlHost \n GrowlServ = $GrowlServ \n Sticky = $Sticky",
@@ -88,7 +88,7 @@ sub sig_message_private ($$$$) {
 	
 	my $Sticky = set_sticky();
 	
-	$growl->notify(
+	growl_notify(
 		Event => "Private Message",
 		Title => "$nick",
 		Message => "$data",
@@ -106,7 +106,7 @@ sub sig_print_text ($$$) {
 	
 	if ($dest->{level} & MSGLEVEL_HILIGHT) {
 		
-		$growl->notify(
+		growl_notify(
 			Event => "Hilight",
 			Title => "$dest->{target}",
 			Message => "$stripped",
@@ -123,7 +123,7 @@ sub sig_notify_joined ($$$$$$) {
 	
 	my $Sticky = set_sticky();
 	
-	$growl->notify(
+	growl_notify(
 		Event => "Join",
 		Title => "$realname" || "$nick",
 		Message => "<$nick!$user\@$host>\nHas joined $server->{chatnet}",
@@ -139,7 +139,7 @@ sub sig_notify_left ($$$$$$) {
 	
 	my $Sticky = set_sticky();
 	
-	$growl->notify(
+	growl_notify(
 		Event => "Part",
 		Title => "$realname" || "$nick",
 		Message => "<$nick!$user\@$host>\nHas left $server->{chatnet}",
@@ -155,7 +155,7 @@ sub sig_message_topic {
 	
 	my $Sticky = set_sticky();
 	
-	$growl->notify(
+	growl_notify(
 		Event => "Topic",
 		Title => "$channel",
 		Message => "Topic for $channel: $topic",
@@ -221,6 +221,17 @@ sub check_connection {
 
 	check_ports($GrowlHost, 5, \%check);
 	return $check{tcp}{$GrowlPort}{open};
+}
+
+sub growl_notify {
+	if (!check_connection()) {
+		Irssi::print("The Growl server is not responding.");
+		return;
+	}
+
+	my (%args) = @_;
+
+	$growl->notify(%args);
 }
 
 Irssi::command_bind('growl-net', 'cmd_help');
