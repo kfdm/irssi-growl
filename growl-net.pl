@@ -10,6 +10,7 @@ use vars qw($VERSION %IRSSI $growl);
 
 use Irssi;
 use Growl::GNTP;
+use IO::Socket::PortState qw(check_ports);
 
 $VERSION = '0.1';
 %IRSSI = (
@@ -205,6 +206,21 @@ sub cmd_register {
 		{ Name => "Part", },
 		{ Name => "Topic", },
 	]);
+}
+
+sub check_connection {
+	my $GrowlHost	= Irssi::settings_get_str('growl_net_client');
+	my $GrowlPort	= Irssi::settings_get_str('growl_net_port');
+	my %check = (
+		tcp  => {
+			$GrowlPort => {
+				name => 'Growl',
+			},
+		},
+	);
+
+	check_ports($GrowlHost, 5, \%check);
+	return $check{tcp}{$GrowlPort}{open};
 }
 
 Irssi::command_bind('growl-net', 'cmd_help');
