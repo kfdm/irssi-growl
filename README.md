@@ -1,7 +1,11 @@
-# ORIGINAL
+# GNTP Growl plugin for irssi
+
+## ORIGINAL
 Irssi growl script taken from [here](http://axman6.homeip.net/blog/growl-net-irssi-script-its-back.html)
 
-# SETTINGS
+## Dependencies
+
+    cpan IO::Socket::PortState Growl::GNTP
 
 ## Notification Settings
 
