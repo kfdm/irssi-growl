@@ -15,7 +15,7 @@ use IO::Socket::PortState qw(check_ports);
 $VERSION = '0.2';
 %IRSSI = (
 	authors		=>	'Paul Traylor (gntp version), '.
-					'Andrew Berry, '
+					'Andrew Berry, ' .
 					'Alex Mason, Jason Adams (based on the growl.pl script from Growl.info by Nelson Elhage and Toby Peterson)',
 	contact		=>	'http://github.com/kfdm/irssi-growl',
 	name		=>	'growl-net',
