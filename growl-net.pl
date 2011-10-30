@@ -12,7 +12,7 @@ use Irssi;
 use Growl::GNTP;
 use IO::Socket::PortState qw(check_ports);
 
-$VERSION = '0.1';
+$VERSION = '0.2';
 %IRSSI = (
 	authors		=>	'Paul Traylor (gntp version), '.
 					'Andrew Berry, '
@@ -67,16 +67,15 @@ sub cmd_help {
 
 sub cmd_growl_net_test {
 	my $GrowlHost	= Irssi::settings_get_str('growl_net_client');
-	my $GrowlServ	= Irssi::settings_get_str('growl_net_server');
+	my $AppName		= Irssi::settings_get_str('growl_net_server');
 	my $GrowlIcon	= Irssi::settings_get_str('growl_net_icon');
-	my $AppName		= "irssi $GrowlServ";
 	
 	my $Sticky = set_sticky();
 	
 	growl_notify(
 		Event => "Private Message",
 		Title => "Test:",
-		Message => "This is a test.\n AppName = $AppName \n GrowlHost = $GrowlHost \n GrowlServ = $GrowlServ \n Sticky = $Sticky",
+		Message => "This is a test.\n AppName = $AppName \n GrowlHost = $GrowlHost \n Sticky = $Sticky",
 		Sticky => "$Sticky",
 		Priority => 0,
 	);
@@ -185,9 +184,8 @@ sub setup {
 	my $GrowlHost	= Irssi::settings_get_str('growl_net_client');
 	my $GrowlPort	= Irssi::settings_get_str('growl_net_port');
 	my $GrowlPass	= Irssi::settings_get_str('growl_net_pass');
-	my $GrowlServ	= Irssi::settings_get_str('growl_net_server');
+	my $AppName		= Irssi::settings_get_str('growl_net_server');
 	my $GrowlIcon	= Irssi::settings_get_str('growl_net_icon');
-	my $AppName		= "irssi $GrowlServ";
 
 	Irssi::print("%G>>%n Registering to send messages to $GrowlHost:$GrowlPort");
 	$growl = Growl::GNTP->new(
