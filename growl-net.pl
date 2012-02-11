@@ -20,7 +20,7 @@ $VERSION = '0.2';
 	contact		=>	'http://github.com/kfdm/irssi-growl',
 	name		=>	'growl-net',
 	description	=>	'Sends out Growl notifications over the netwotk or internet for Irssi. '.
-					'Requires Growl::GNTP',
+					'IO::Socket::PortState Growl::GNTP',
 	license		=>	'BSD',
 	url			=>	'http://github.com/kfdm/irssi-growl (gntp version), '.
 					'http://axman6.homeip.net/blog/growl-net-irssi-script-its-back.html (udp version),  '.

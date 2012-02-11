@@ -3,9 +3,16 @@
 ## ORIGINAL
 Irssi growl script taken from [here](http://axman6.homeip.net/blog/growl-net-irssi-script-its-back.html)
 
-## Dependencies
+## Installing
+
+irssi-growl has two main dependencies that you will need to install from CPANI'm work
 
     cpan IO::Socket::PortState Growl::GNTP
+
+Some dependencies are better installed through your distro. For example with CentOS
+
+    yum install uuid-perl perl-Digest-SHA
+
 
 ## Notification Settings
 
@@ -31,7 +38,7 @@ On a Mac network this may be computer.local
 ### `growl_net_port`
 The port on the destination computer
 
-### `growl_net_server`
+### `growl_app_name`
 The name of the computer running irssi
 
 ### `growl_net_pass`
