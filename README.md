@@ -13,6 +13,36 @@ Some dependencies are better installed through your distro. For example with Cen
 
     yum install uuid-perl perl-Digest-SHA
 
+Assuming you cloned into ~/.irssi/scripts you would then want to load the plugin in irssi
+
+    /script load irssi-growl/growl-net.pl
+
+and set growl_net_client and growl_net_password
+
+    /set growl_net_client <Address of the computer receiving growl messages>
+    /set growl_net_pass <Password on receiving computer>
+
+before finally registering and sending a test message
+
+    /growl-register
+    /gn-test
+
+## Usage
+
+Most of the settings can be viewed from within irssi
+
+    /growl-net
+    Irssi: Growl-net can be configured with these settings:
+    ...
+
+Whenever you change the growl_net_* properties you will need to "reregister" for
+it to properly showup on the receiving computer
+
+    /set growl_net_app new app title
+    /set growl_net_pass newpassword
+    /set growl_net_icon http://example.com/icon.png
+    /growl-register
+
 
 ## Notification Settings
 
@@ -38,7 +68,7 @@ On a Mac network this may be computer.local
 ### `growl_net_port`
 The port on the destination computer
 
-### `growl_app_name`
+### `growl_net_name`
 The name of the computer running irssi
 
 ### `growl_net_pass`
