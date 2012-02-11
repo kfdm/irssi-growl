@@ -37,7 +37,7 @@ Irssi::settings_add_bool($IRSSI{'name'}, 'growl_auto_register', 0);
 Irssi::settings_add_str($IRSSI{'name'}, 'growl_net_pass', 'password');
 Irssi::settings_add_str($IRSSI{'name'}, 'growl_net_client', 'localhost');
 Irssi::settings_add_str($IRSSI{'name'}, 'growl_net_port', '23053');
-Irssi::settings_add_str($IRSSI{'name'}, 'growl_net_server', 'local');
+Irssi::settings_add_str($IRSSI{'name'}, 'growl_app_name', 'irssi');
 Irssi::settings_add_str($IRSSI{'name'}, 'growl_net_icon', '');
 # Sticky Settings
 Irssi::settings_add_bool($IRSSI{'name'}, 'growl_net_sticky', 0);
@@ -56,7 +56,7 @@ sub cmd_help {
 	Irssi::print('  %ygrowl_net_client%n :      Set to the hostname you want to recieve notifications on.');
 	Irssi::print('    %R>>>> (computer.local for a Mac network. Your \'localhost\').'); 
 	Irssi::print('  %ygrowl_net_port%n :        Set to the port you want to recieve notifications on.');
-	Irssi::print('  %ygrowl_net_server%n :      Set to the name you want to give the machine irssi is running on. (remote)');
+	Irssi::print('  %ygrowl_app_name%n :        Set to the name you want to give the machine irssi is running on.');
 	Irssi::print('  %ygrowl_net_pass%n :        Set to your destination\'s Growl password. (Your machine)');
 	Irssi::print('  %ygrowl_auto_register%n :   Automatically send gntp registration on script load');
 
@@ -67,7 +67,7 @@ sub cmd_help {
 
 sub cmd_growl_net_test {
 	my $GrowlHost	= Irssi::settings_get_str('growl_net_client');
-	my $AppName		= Irssi::settings_get_str('growl_net_server');
+	my $AppName		= Irssi::settings_get_str('growl_app_name');
 	my $GrowlIcon	= Irssi::settings_get_str('growl_net_icon');
 	
 	my $Sticky = set_sticky();
@@ -184,7 +184,7 @@ sub setup {
 	my $GrowlHost	= Irssi::settings_get_str('growl_net_client');
 	my $GrowlPort	= Irssi::settings_get_str('growl_net_port');
 	my $GrowlPass	= Irssi::settings_get_str('growl_net_pass');
-	my $AppName		= Irssi::settings_get_str('growl_net_server');
+	my $AppName		= Irssi::settings_get_str('growl_app_name');
 	my $GrowlIcon	= Irssi::settings_get_str('growl_net_icon');
 
 	Irssi::print("%G>>%n Registering to send messages to $GrowlHost:$GrowlPort");
