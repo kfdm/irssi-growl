@@ -32,7 +32,7 @@ Irssi::settings_add_bool($IRSSI{'name'}, 'growl_show_privmsg', 1);
 Irssi::settings_add_bool($IRSSI{'name'}, 'growl_show_hilight', 1);
 Irssi::settings_add_bool($IRSSI{'name'}, 'growl_show_notify', 1);
 Irssi::settings_add_bool($IRSSI{'name'}, 'growl_show_topic', 1);
-Irssi::settings_add_bool($IRSSI{'name'}, 'growl_auto_register', 1);
+Irssi::settings_add_bool($IRSSI{'name'}, 'growl_auto_register', 0);
 # Network Settings
 Irssi::settings_add_str($IRSSI{'name'}, 'growl_net_pass', '');
 Irssi::settings_add_str($IRSSI{'name'}, 'growl_net_client', 'localhost');
