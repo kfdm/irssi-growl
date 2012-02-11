@@ -17,7 +17,7 @@ Assuming you cloned into ~/.irssi/scripts you would then want to load the plugin
 
     /script load irssi-growl/growl-net.pl
 
-and set growl_net_client and growl_net_password
+and set `growl_net_client` and `growl_net_password`
 
     /set growl_net_client <Address of the computer receiving growl messages>
     /set growl_net_pass <Password on receiving computer>
@@ -35,7 +35,7 @@ Most of the settings can be viewed from within irssi
     Irssi: Growl-net can be configured with these settings:
     ...
 
-Whenever you change the growl_net_* properties you will need to "reregister" for
+Whenever you change the `growl_net_*` properties you will need to "reregister" for
 it to properly showup on the receiving computer
 
     /set growl_net_app new app title
