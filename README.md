@@ -5,7 +5,7 @@ Irssi growl script taken from [here](http://axman6.homeip.net/blog/growl-net-irs
 
 ## Installing
 
-irssi-growl has two main dependencies that you will need to install from CPANI'm work
+irssi-growl has two main dependencies that you will need to install from CPAN
 
     cpan IO::Socket::PortState Growl::GNTP
 
@@ -22,7 +22,11 @@ and set `growl_net_client` and `growl_net_password`
     /set growl_net_client <Address of the computer receiving growl messages>
     /set growl_net_pass <Password on receiving computer>
 
-before finally registering and sending a test message
+If you want to write those settings to your config file, make sure to save.
+
+    /save
+
+Lastly you want to send the registration message to Growl and sending a test message to verify everything is setup properly.
 
     /growl-register
     /gn-test
