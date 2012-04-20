@@ -33,6 +33,7 @@ Irssi::settings_add_bool($IRSSI{'name'}, 'growl_show_hilight', 1);
 Irssi::settings_add_bool($IRSSI{'name'}, 'growl_show_notify', 1);
 Irssi::settings_add_bool($IRSSI{'name'}, 'growl_show_topic', 1);
 Irssi::settings_add_bool($IRSSI{'name'}, 'growl_auto_register', 0);
+Irssi::settings_add_bool($IRSSI{'name'}, 'growl_reveal_privmsg', 0);
 # Network Settings
 Irssi::settings_add_str($IRSSI{'name'}, 'growl_net_pass', '');
 Irssi::settings_add_str($IRSSI{'name'}, 'growl_net_client', 'localhost');
@@ -48,6 +49,7 @@ sub cmd_help {
 
 	Irssi::print('%WNotification Settings%n');
 	Irssi::print('  %ygrowl_show_privmsg%n :    Notify about private messages.');
+        Irssi::print('  %ygrowl_reveal_privmsg%n :  Include private messages in notification.');
 	Irssi::print('  %ygrowl_show_hilight%n :    Notify when your name is hilighted.');
 	Irssi::print('  %ygrowl_show_topic%n :      Notify about topic changes.');
 	Irssi::print('  %ygrowl_show_notify%n :     Notify when someone on your away list joins or leaves.');
@@ -87,11 +89,15 @@ sub sig_message_private ($$$$) {
 	my ($server, $data, $nick, $address) = @_;
 	
 	my $Sticky = set_sticky();
-	
+
+        my $message = "private message";
+    
+        $message = "$data" if (Irssi::settings_get_bool('growl_reveal_privmsg'));
+    
 	growl_notify(
 		Event => "Private Message",
 		Title => "$nick",
-		Message => "$data",
+		Message => "$message",
 		Priority => 0,
 		Sticky => "$Sticky",
 	);
