@@ -53,6 +53,9 @@ it to properly showup on the receiving computer
 ### `growl_show_privmsg`
 (ON/OFF/TOGGLE) Send a notification on private messages
 
+### `growl_reveal_privmsg`
+(ON/OFF/TOGGLE) Reveal the content of private messages in notifications
+
 ### `growl_show_hilight`
 (ON/OFF/TOGGLE) Send a notification when your name is hilighted
 
