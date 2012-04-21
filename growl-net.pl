@@ -12,7 +12,7 @@ use Irssi;
 use Growl::GNTP;
 use IO::Socket::PortState qw(check_ports);
 
-$VERSION = '0.2';
+$VERSION = '0.3';
 %IRSSI = (
 	authors		=>	'Paul Traylor (gntp version), '.
 					'Andrew Berry, ' .
@@ -49,7 +49,7 @@ sub cmd_help {
 
 	Irssi::print('%WNotification Settings%n');
 	Irssi::print('  %ygrowl_show_privmsg%n :    Notify about private messages.');
-        Irssi::print('  %ygrowl_reveal_privmsg%n :  Include private messages in notification.');
+	Irssi::print('  %ygrowl_reveal_privmsg%n :  Include private messages in notification.');
 	Irssi::print('  %ygrowl_show_hilight%n :    Notify when your name is hilighted.');
 	Irssi::print('  %ygrowl_show_topic%n :      Notify about topic changes.');
 	Irssi::print('  %ygrowl_show_notify%n :     Notify when someone on your away list joins or leaves.');
@@ -90,10 +90,9 @@ sub sig_message_private ($$$$) {
 	
 	my $Sticky = set_sticky();
 
-        my $message = "private message";
-    
-        $message = "$data" if (Irssi::settings_get_bool('growl_reveal_privmsg'));
-    
+	my $message = "private message";
+	$message = "$data" if (Irssi::settings_get_bool('growl_reveal_privmsg'));
+
 	growl_notify(
 		Event => "Private Message",
 		Title => "$nick",
