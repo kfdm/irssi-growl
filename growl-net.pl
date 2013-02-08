@@ -6,7 +6,7 @@
 # Based on the original growl script by Nelson Elhage and Toby Peterson.
 
 use strict;
-use vars qw($VERSION %IRSSI $growl);
+use vars qw($VERSION %IRSSI @growl);
 
 use Irssi;
 use Growl::GNTP;
@@ -38,6 +38,7 @@ Irssi::settings_add_bool($IRSSI{'name'}, 'growl_reveal_privmsg', 0);
 Irssi::settings_add_str($IRSSI{'name'}, 'growl_net_pass', '');
 Irssi::settings_add_str($IRSSI{'name'}, 'growl_net_client', 'localhost');
 Irssi::settings_add_str($IRSSI{'name'}, 'growl_net_port', '23053');
+Irssi::settings_add_str($IRSSI{'name'}, 'growl_net_timeout', '2');
 Irssi::settings_add_str($IRSSI{'name'}, 'growl_net_name', 'irssi');
 Irssi::settings_add_str($IRSSI{'name'}, 'growl_net_icon', '');
 # Sticky Settings
@@ -58,6 +59,7 @@ sub cmd_help {
 	Irssi::print('  %ygrowl_net_client%n :      Set to the hostname you want to recieve notifications on.');
 	Irssi::print('    %R>>>> (computer.local for a Mac network. Your \'localhost\').'); 
 	Irssi::print('  %ygrowl_net_port%n :        Set to the port you want to recieve notifications on.');
+	Irssi::print('  %ygrowl_net_timeout%n :     Set the timeout for sending notifications.');
 	Irssi::print('  %ygrowl_net_name%n :        Set to the name you want to give the machine irssi is running on.');
 	Irssi::print('  %ygrowl_net_pass%n :        Set to your destination\'s Growl password. (Your machine)');
 	Irssi::print('  %ygrowl_auto_register%n :   Automatically send gntp registration on script load');
@@ -188,33 +190,43 @@ sub set_sticky {
 sub setup {
 	my $GrowlHost	= Irssi::settings_get_str('growl_net_client');
 	my $GrowlPort	= Irssi::settings_get_str('growl_net_port');
+	my $GrowlTimeout	= Irssi::settings_get_str('growl_net_timeout');
 	my $GrowlPass	= Irssi::settings_get_str('growl_net_pass');
 	my $AppName		= Irssi::settings_get_str('growl_net_name');
 	my $GrowlIcon	= Irssi::settings_get_str('growl_net_icon');
 
-	Irssi::print("%G>>%n Registering to send messages to $GrowlHost:$GrowlPort");
-	$growl = Growl::GNTP->new(
-		AppName => $AppName,
-		PeerHost => $GrowlHost,
-		PeerPort => $GrowlPort,
-		Password => $GrowlPass,
-		AppIcon => $GrowlIcon,
-	);
+	foreach my $host (split /\s+/, $GrowlHost) {
+		Irssi::print("%G>>%n Registering to send messages to $host:$GrowlPort");
+		push(@growl,
+			Growl::GNTP->new(
+				AppName => $AppName,
+				PeerHost => $host,
+				PeerPort => $GrowlPort,
+				Timeout => $GrowlTimeout,
+				Password => $GrowlPass,
+				AppIcon => $GrowlIcon,
+			)
+		);
+	}
 }
 
 sub cmd_register {
-	$growl->register([
-		{ Name => "Private Message", },
-		{ Name => "Hilight", },
-		{ Name => "Join", },
-		{ Name => "Part", },
-		{ Name => "Topic", },
-	]);
+	foreach my $growl (@growl) {
+		$growl->register([
+			{ Name => "Private Message", },
+			{ Name => "Hilight", },
+			{ Name => "Join", },
+			{ Name => "Part", },
+			{ Name => "Topic", },
+		]);
+	}
 }
 
 sub check_connection {
-	my $GrowlHost	= Irssi::settings_get_str('growl_net_client');
-	my $GrowlPort	= Irssi::settings_get_str('growl_net_port');
+	my($host) = shift;
+	my $GrowlPort = Irssi::settings_get_str('growl_net_port');
+	my $GrowlTimeout = Irssi::settings_get_str('growl_net_timeout');
+
 	my %check = (
 		tcp  => {
 			$GrowlPort => {
@@ -223,19 +235,22 @@ sub check_connection {
 		},
 	);
 
-	check_ports($GrowlHost, 5, \%check);
+	check_ports($host, $GrowlTimeout, \%check);
 	return $check{tcp}{$GrowlPort}{open};
 }
 
 sub growl_notify {
-	if (!check_connection()) {
-		Irssi::print("The Growl server is not responding.");
-		return;
-	}
-
 	my (%args) = @_;
 
-	$growl->notify(%args);
+	foreach my $growl (@growl) {
+		if (!check_connection($growl->{PeerHost})) {
+			next;
+		}
+		eval {
+			# Ignore failure and continue onto the next host.
+			$growl->notify(%args);
+		}
+	}
 }
 
 Irssi::command_bind('growl-net',      'cmd_help');

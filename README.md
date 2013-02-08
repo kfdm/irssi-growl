@@ -68,12 +68,15 @@ it to properly showup on the receiving computer
 ## Network Settings
 
 ### `growl_net_client`
-Set to the hostname you want to send notifications to
+A space-separated list of the hostname(s) you want to send notifications to
 
 On a Mac network this may be computer.local
 
 ### `growl_net_port`
 The port on the destination computer
+
+### `growl_net_timeout`
+The network timeout when sending notifications
 
 ### `growl_net_name`
 The name of the computer running irssi
